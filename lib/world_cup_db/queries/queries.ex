@@ -13,11 +13,22 @@ defmodule WorldCupDb.Queries do
   alias WorldCupDb.Entities.RosterSpot
   alias WorldCupDb.Entities.Stadium
 
-  def specific_cup_query(year) do
+  def specific_cup_query_standings(year) do
     from cp in CountryParticipation,
       join: c in Country, on: c.id == cp.cid,
       select: %{country: c.name, result: cp.result},
-      where: cp.year == ^year
+      where: cp.year == ^year,
+      order_by: cp.result
+  end
+
+  def specific_cup_query_games(year) do
+    from g in Game,
+      join: w in Country, on: w.id == g.winnercid,
+      join: l in Country, on: l.id == g.losercid,
+      join: s in Stadium, on: s.id == g.stadid,
+      select: %{game_num: g.id, round: g.round, date: g.date, time: g.time, group: g.grid, stadium: s.id, winner: w.name, loser: l.name, w_goals: g.wgoals, l_goals: g.lgoals, pk_score: g.pkscore},
+      where: g.year == ^year,
+      order_by: g.id
   end
 
   def specific_player_query(name) do
