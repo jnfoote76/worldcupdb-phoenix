@@ -15,12 +15,17 @@ defmodule WorldCupDb.Web.QueryController do
   def specific_cup(conn, _params) do
     {:ok, year} = Map.fetch(conn.query_params, "year")
 
-    results = year
+    standings = year
     |> String.to_integer
-    |> Queries.specific_cup_query
+    |> Queries.specific_cup_query_standings
     |> Repo.all
 
-    render(conn, "specific_cup.json", results: results)
+    games = year
+    |> String.to_integer
+    |> Queries.specific_cup_query_games
+    |> Repo.all
+
+    render(conn, "specific_cup.json", results: %{standings: standings, games: games})
   end
 
   def specific_player(conn, _params) do

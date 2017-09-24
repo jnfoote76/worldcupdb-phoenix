@@ -2,15 +2,42 @@ defmodule WorldCupDb.Web.QueryView do
   use WorldCupDb.Web, :view
   alias WorldCupDb.Web.QueryView
 
-  def render("specific_cup.json", %{results: results}) do
-    %{data: render_many(results, QueryView, "specific_cup.json")}
+  def render("specific_cup.json", %{results: %{standings: standings, games: games}}) do
+    %{data:
+      %{standings: render_many(standings, QueryView, "specific_cup_standings.json"),
+        games: render_many(games, QueryView, "specific_cup_games.json")}}
   end
 
-  def render("specific_cup.json", %{query: query}) do
+  def render("specific_cup_standings.json", %{query: query}) do
     {:ok, country} = Map.fetch(query, :country)
     {:ok, result} = Map.fetch(query, :result)
     %{country: country,
       result: result}
+  end
+
+  def render("specific_cup_games.json", %{query: query}) do
+    {:ok, game_num} = Map.fetch(query, :game_num)
+    {:ok, round} = Map.fetch(query, :round)
+    {:ok, date} = Map.fetch(query, :date)
+    {:ok, time} = Map.fetch(query, :time)
+    {:ok, group} = Map.fetch(query, :group)
+    {:ok, stadium} = Map.fetch(query, :stadium)
+    {:ok, winner} = Map.fetch(query, :winner)
+    {:ok, loser} = Map.fetch(query, :loser)
+    {:ok, w_goals} = Map.fetch(query, :w_goals)
+    {:ok, l_goals} = Map.fetch(query, :l_goals)
+    {:ok, pk_score} = Map.fetch(query, :pk_score)
+    %{game_num: game_num,
+      round: round,
+      date: date,
+      time: time,
+      group: group,
+      stadium: stadium,
+      winner: winner,
+      loser: loser,
+      w_goals: w_goals,
+      l_goals: l_goals,
+      pk_score: pk_score}
   end
 
   def render("specific_player.json", %{results: results}) do
