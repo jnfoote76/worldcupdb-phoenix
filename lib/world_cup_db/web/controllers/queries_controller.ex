@@ -12,20 +12,26 @@ defmodule WorldCupDb.Web.QueryController do
 
   action_fallback WorldCupDb.Web.FallbackController
 
-  def specific_cup(conn, _params) do
+  def specific_cup_standings(conn, _params) do
     {:ok, year} = Map.fetch(conn.query_params, "year")
 
-    standings = year
+    query_results = year
     |> String.to_integer
     |> Queries.specific_cup_query_standings
     |> Repo.all
 
-    games = year
+    render(conn, "specific_cup_standings.json", results: query_results)
+  end
+
+  def specific_cup_games(conn, _params) do
+    {:ok, year} = Map.fetch(conn.query_params, "year")
+
+    query_results = year
     |> String.to_integer
     |> Queries.specific_cup_query_games
     |> Repo.all
 
-    render(conn, "specific_cup.json", results: %{standings: standings, games: games})
+    render(conn, "specific_cup_games.json", results: query_results)
   end
 
   def specific_player(conn, _params) do

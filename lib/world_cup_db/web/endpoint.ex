@@ -38,6 +38,8 @@ defmodule WorldCupDb.Web.Endpoint do
     key: "_world_cup_db_key",
     signing_salt: "qIVECNV2"
 
+  plug CORSPlug, origin: ["http://localhost:8080"]
+
   plug WorldCupDb.Web.Router
 
   @doc """

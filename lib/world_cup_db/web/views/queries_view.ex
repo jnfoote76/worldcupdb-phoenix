@@ -2,10 +2,8 @@ defmodule WorldCupDb.Web.QueryView do
   use WorldCupDb.Web, :view
   alias WorldCupDb.Web.QueryView
 
-  def render("specific_cup.json", %{results: %{standings: standings, games: games}}) do
-    %{data:
-      %{standings: render_many(standings, QueryView, "specific_cup_standings.json"),
-        games: render_many(games, QueryView, "specific_cup_games.json")}}
+  def render("specific_cup_standings.json", %{results: results}) do
+    %{data: render_many(results, QueryView, "specific_cup_standings.json")}
   end
 
   def render("specific_cup_standings.json", %{query: query}) do
@@ -13,6 +11,10 @@ defmodule WorldCupDb.Web.QueryView do
     {:ok, result} = Map.fetch(query, :result)
     %{country: country,
       result: result}
+  end
+
+  def render("specific_cup_games.json", %{results: results}) do
+    %{data: render_many(results, QueryView, "specific_cup_games.json")}
   end
 
   def render("specific_cup_games.json", %{query: query}) do

@@ -3,7 +3,6 @@ defmodule WorldCupDb.Entities.Stadium do
   import Ecto.Changeset
   alias WorldCupDb.Entities.Stadium
 
-
   schema "stadium" do
     field :cid, :integer
     field :city, :string

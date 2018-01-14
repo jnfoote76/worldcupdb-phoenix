@@ -40,7 +40,8 @@ defmodule WorldCupDb.Queries do
       where: p.name == ^name,
       select: %{name: p.name, country: c.name, year: r.year,
                 position: r.position, first_game_date: g.date,
-                birthdate: p.birthdate, num_goals: r.goals}
+                birthdate: p.birthdate, num_goals: r.goals},
+      order_by: r.year
   end
 
   def modified_player_result(result) do
@@ -180,7 +181,8 @@ defmodule WorldCupDb.Queries do
     from pgc in subquery(players_goal_count_gt0()),
     select: %{player: pgc.player, country: pgc.country, goals: pgc.goals,
               pks: pgc.pks},
-    where: like(pgc.country, ^country)
+    where: like(pgc.country, ^country),
+    order_by: pgc.player
   end
 
   defp all_players_goal_count do
@@ -199,7 +201,8 @@ defmodule WorldCupDb.Queries do
 
   def crest_image_query do
     from c in Country,
-    select: %{country: c.name, crestURL: c.cresturl}
+    select: %{country: c.name, crestURL: c.cresturl},
+    order_by: c.name
   end
 
   def goals_at_stadium_query do

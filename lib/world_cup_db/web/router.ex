@@ -23,7 +23,8 @@ defmodule WorldCupDb.Web.Router do
   scope "/api", WorldCupDb.Web do
     pipe_through :api
 
-    get "/query/specific_cup", QueryController, :specific_cup
+    get "/query/specific_cup_standings", QueryController, :specific_cup_standings
+    get "/query/specific_cup_games", QueryController, :specific_cup_games
     get "/query/specific_player", QueryController, :specific_player
     get "/query/superstars", QueryController, :superstars
     get "/query/team_historical", QueryController, :team_historical
