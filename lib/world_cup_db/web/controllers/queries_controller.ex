@@ -9,99 +9,92 @@ defmodule WorldCupDb.Web.QueryController do
 
   alias WorldCupDb.Repo
   alias WorldCupDb.Queries
+  alias WorldCupDb.Queries.PlayerParticipationParams
+  alias WorldCupDb.Queries.PlayerCareerParams
+  alias WorldCupDb.Queries.CountryParticipationParams
+  alias WorldCupDb.Queries.CountryHistoricalParams
+  alias WorldCupDb.Queries.MatchParams
 
   action_fallback WorldCupDb.Web.FallbackController
 
-  def specific_cup_standings(conn, _params) do
-    {:ok, year} = Map.fetch(conn.query_params, "year")
+  def player_participation(conn, _params) do
+    case PlayerParticipationParams.changeset(%PlayerParticipationParams{}, conn.query_params) do
+      %{:valid? => true, :changes => filter_map} ->
+        query_results = 
+          filter_map
+          |> Queries.player_participation_query
+          |> Repo.all
+          |> Enum.map(&Queries.find_player_age/1)
+        render(conn, "player_participation.json", results: query_results)
 
-    query_results = year
-    |> String.to_integer
-    |> Queries.specific_cup_query_standings
-    |> Repo.all
-
-    render(conn, "specific_cup_standings.json", results: query_results)
+      changeset -> 
+        conn
+        |> put_status(400)
+        |> render(WorldCupDb.Web.ChangesetView, "error.json", changeset: changeset)
+    end
   end
 
-  def specific_cup_games(conn, _params) do
-    {:ok, year} = Map.fetch(conn.query_params, "year")
+  def player_career(conn, _params) do
+    case PlayerCareerParams.changeset(%PlayerCareerParams{}, conn.query_params) do
+      %{:valid? => true, :changes => filter_map} ->
+        query_results = 
+          filter_map
+          |> Queries.player_career_query
+          |> Repo.all
+        render(conn, "player_career.json", results: query_results)
 
-    query_results = year
-    |> String.to_integer
-    |> Queries.specific_cup_query_games
-    |> Repo.all
-
-    render(conn, "specific_cup_games.json", results: query_results)
+      changeset -> 
+        conn
+        |> put_status(400)
+        |> render(WorldCupDb.Web.ChangesetView, "error.json", changeset: changeset)
+    end
   end
 
-  def specific_player(conn, _params) do
-    {:ok, name} = Map.fetch(conn.query_params, "name")
+  def country_participation(conn, _params) do
+    case CountryParticipationParams.changeset(%CountryParticipationParams{}, conn.query_params) do
+      %{:valid? => true, :changes => filter_map} ->
+        query_results = 
+          filter_map
+          |> Queries.country_participation_query
+          |> Repo.all
+        render(conn, "country_participation.json", results: query_results)
 
-    query_results = name
-    |> Queries.specific_player_query
-    |> Repo.all
-    |> Enum.map(&Queries.modified_player_result/1)
-
-    render(conn, "specific_player.json", results: query_results)
+      changeset -> 
+        conn
+        |> put_status(400)
+        |> render(WorldCupDb.Web.ChangesetView, "error.json", changeset: changeset)
+    end
   end
 
-  def superstars(conn, _params) do
-    query_results = Queries.superstars_query()
-    |> Repo.all
+  def country_historical(conn, _params) do
+    case CountryHistoricalParams.changeset(%CountryHistoricalParams{}, conn.query_params) do
+      %{:valid? => true, :changes => filter_map} ->
+        query_results = 
+          filter_map
+          |> Queries.country_historical_query
+          |> Repo.all
+        render(conn, "country_historical.json", results: query_results)
 
-    render(conn, "superstars.json", results: query_results)
+      changeset -> 
+        conn
+        |> put_status(400)
+        |> render(WorldCupDb.Web.ChangesetView, "error.json", changeset: changeset)
+    end
   end
 
-  def team_historical(conn, _params) do
-    {:ok, name} = Map.fetch(conn.query_params, "name")
+  def match(conn, _params) do
+    case MatchParams.changeset(%MatchParams{}, conn.query_params) do
+      %{:valid? => true, :changes => filter_map} ->
+        query_results = 
+          filter_map
+          |> Queries.match_query
+          |> Repo.all
+        render(conn, "match.json", results: query_results)
 
-    results = name
-    |> Queries.team_historical_query
-    |> Repo.all
-    |> Enum.map(&Queries.modified_team_historical_result/1)
-
-    render(conn, "team_historical.json", results: results)
-  end
-
-  def countrys_players(conn, _params) do
-    {:ok, name} = Map.fetch(conn.query_params, "name")
-
-    results = name
-    |> Queries.countrys_players_query
-    |> Repo.all
-
-    render(conn, "countrys_players.json", results: results)
-  end
-
-  def crest_image(conn, _params) do
-    results = Queries.crest_image_query()
-    |> Repo.all
-
-    render(conn, "crest_image.json", results: results)
-  end
-
-  def goals_at_stadium(conn, _params) do
-    results = Queries.goals_at_stadium_query()
-    |> Repo.all
-
-    render(conn, "goals_at_stadium.json", results: results)
-  end
-
-  def most_wins(conn, _params) do
-    results = Queries.most_wins_query()
-    |> Repo.all
-
-    render(conn, "most_wins.json", results: results)
-  end
-
-  def country_rivalry(conn, _params) do
-    {:ok, country_a} = Map.fetch(conn.query_params, "country_a")
-    {:ok, country_b} = Map.fetch(conn.query_params, "country_b")
-
-    results = country_a
-    |> Queries.country_rivalry_query(country_b)
-    |> Repo.all
-
-    render(conn, "country_rivalry.json", results: results)
+      changeset -> 
+        conn
+        |> put_status(400)
+        |> render(WorldCupDb.Web.ChangesetView, "error.json", changeset: changeset)
+    end
   end
 end
