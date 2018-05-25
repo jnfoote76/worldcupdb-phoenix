@@ -342,20 +342,9 @@ defmodule WorldCupDb.Queries do
       join: s in Stadium, on: s.id == g.stadid,
       join: w in Country, on: w.id == g.winnercid,
       join: l in Country, on: l.id == g.losercid,
-      select: %{
-        year: g.year, 
-        date: g.date,
-        time: g.time,
-        stadium: s.name,
-        city: s.city,
-        host: h.name,
-        round: g.round,
-        group: g.grid, 
-        winner: w.name,
-        winner_goals: g.wgoals,
-        loser: l.name,
-        loser_goals: g.lgoals,
-        pk_score: g.pkscore},
+      select: %{year: g.year, date: g.date, time: g.time, stadium: s.name, city: s.city, host: h.name, round: g.round, 
+                group: g.grid, winner: w.name, winner_goals: g.wgoals, loser: l.name, loser_goals: g.lgoals,
+                pk_score: g.pkscore},
       where: ^filter,
       order_by: [g.year, g.id]
   end
