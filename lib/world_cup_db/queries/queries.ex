@@ -48,8 +48,16 @@ defmodule WorldCupDb.Queries do
   defp player_age(year, first_game_date, player_birthdate) do
     {:ok, first_game_as_date} = Timex.parse("#{first_game_date} #{Integer.to_string(year)}",
                                             "{D} {Mfull} {YYYY}")
-    {:ok, birthdate_as_date} = Timex.parse(player_birthdate, "{D} {Mfull} {YYYY}")
-    Timex.diff(first_game_as_date, birthdate_as_date, :years)
+    cond do
+      String.match?(player_birthdate, ~R/[0-9]{1,2} [A-Za-z]+ [0-9]{4}/) ->
+        {:ok, birthdate_as_date} = Timex.parse(player_birthdate, "{D} {Mfull} {YYYY}")
+        Timex.diff(first_game_as_date, birthdate_as_date, :years)
+      String.match?(player_birthdate, ~R/[0-9]{4}/) ->
+        player_birthdate_norm = "1 January #{player_birthdate}"
+        {:ok, birthdate_as_date} = Timex.parse(player_birthdate_norm, "{D} {Mfull} {YYYY}")
+        Timex.diff(first_game_as_date, birthdate_as_date, :years)
+      true -> 0
+    end
   end
 
   defp player_participation_filter(filter_map) do

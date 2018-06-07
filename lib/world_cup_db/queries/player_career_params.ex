@@ -4,7 +4,7 @@ defmodule WorldCupDb.Queries.PlayerCareerParams do
   alias WorldCupDb.Queries.PlayerCareerParams
   
   schema "player_career_params" do
-    field :name, :integer
+    field :name, :string
     field :country, :string
     field :min_num_goals, :integer
     field :min_num_cups, :integer

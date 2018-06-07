@@ -3,7 +3,7 @@ defmodule WorldCupDb.Queries.CountryParticipationParams do
   import Ecto.Changeset
   alias WorldCupDb.Queries.CountryParticipationParams
   
-  schema "player_career_params" do
+  schema "country_participation_params" do
     field :year, :integer
     field :country, :string
   end

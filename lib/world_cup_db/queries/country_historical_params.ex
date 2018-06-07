@@ -3,7 +3,7 @@ defmodule WorldCupDb.Queries.CountryHistoricalParams do
     import Ecto.Changeset
     alias WorldCupDb.Queries.CountryHistoricalParams
     
-    schema "country_historical" do
+    schema "country_historical_params" do
       field :country, :string
       field :min_num_cups, :integer
       field :min_num_wins, :integer

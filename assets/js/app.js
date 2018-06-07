@@ -1,21 +1,19 @@
-// Brunch automatically concatenates all files in your
-// watched paths. Those paths can be configured at
-// config.paths.watched in "brunch-config.js".
-//
-// However, those files will only be executed if
-// explicitly imported. The only exception are files
-// in vendor, which are never wrapped in imports and
-// therefore are always executed.
-
-// Import dependencies
-//
-// If you no longer want to use a dependency, remember
-// to also remove its path from "config.paths.watched".
+import Vue from 'vue'
+import VueResource from 'vue-resource'
+import BootstrapVue from "bootstrap-vue"
+import Autocomplete from 'v-autocomplete'
+import router from './router'
+import App from './App.vue'
+import "bootstrap/dist/css/bootstrap.min.css"
+import "bootstrap-vue/dist/bootstrap-vue.css"
 import "phoenix_html"
 
-// Import local files
-//
-// Local files can be imported directly using relative
-// paths "./socket" or full ones "web/static/js/socket".
+Vue.use(VueResource)
+Vue.use(BootstrapVue)
+Vue.use(Autocomplete)
 
-// import socket from "./socket"
+new Vue({
+  el: '#app',
+  router,
+  render: h => h(App)
+})

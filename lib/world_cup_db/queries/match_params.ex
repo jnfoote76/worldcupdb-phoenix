@@ -3,7 +3,7 @@ defmodule WorldCupDb.Queries.MatchParams do
     import Ecto.Changeset
     alias WorldCupDb.Queries.MatchParams
     
-    schema "country_historical" do
+    schema "match_params" do
       field :year, :string
       field :stadium, :string
       field :country_a, :string
